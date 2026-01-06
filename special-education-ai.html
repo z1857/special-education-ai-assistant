@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特殊教育劳动技能AI助手 | 参赛项目</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: linear-gradient(to bottom right, #e6f2ff, #f9f5ff);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #4a6fa5 0%, #3a5a8c 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(58, 90, 140, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        h1 i {
+            color: #ffd166;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        
+        .chat-section {
+            flex: 3;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: linear-gradient(to right, #5d8aa8, #4a7b9d);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .chat-header i {
+            font-size: 1.8rem;
+        }
+        
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 15px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: #e3f2fd;
+            border-bottom-right-radius: 5px;
+            color: #1a3a5f;
+        }
+        
+        .ai-message {
+            align-self: flex-start;
+            background-color: #f1f8ff;
+            border-bottom-left-radius: 5px;
+            color: #333;
+        }
+        
+        .message-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-message .message-header {
+            color: #2c5aa0;
+        }
+        
+        .ai-message .message-header {
+            color: #4a6fa5;
+        }
+        
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            background-color: #f9fbfd;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #c5d5ea;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #user-input:focus {
+            border-color: #4a6fa5;
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+        
+        #send-btn {
+            background: linear-gradient(to right, #4a6fa5, #5d8aa8);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #send-btn:hover {
+            background: linear-gradient(to right, #3a5a8c, #4a7b9d);
+            transform: translateY(-2px);
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .info-box, .qrcode-box {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .info-box h2, .qrcode-box h2 {
+            color: #4a6fa5;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-box ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box li {
+            margin-bottom: 10px;
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .skill-tag {
+            background-color: #e6f2ff;
+            color: #2c5aa0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .qrcode-instructions {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .example-btn {
+            background-color: #f0f7ff;
+            border: 1px solid #c5d5ea;
+            color: #4a6fa5;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example-btn:hover {
+            background-color: #e3f2fd;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .chat-container {
+                height: 400px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        .typing-indicator {
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            background-color: #f1f8ff;
+            border-radius: 15px;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #9bb8e5;
+            margin-right: 3px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .qrcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #qrcode canvas, #qrcode img {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+        
+        .chat-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #f9fbfd;
+            border-top: 1px solid #eee;
+        }
+        
+        .clear-btn {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .clear-btn:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        .qrcode-placeholder {
+            width: 200px;
+            height: 200px;
+            background-color: #f5f9ff;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #4a6fa5;
+            font-weight: bold;
+            border: 2px dashed #c5d5ea;
+        }
+        
+        .qrcode-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .download-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .download-btn:hover {
+            background: linear-gradient(to right, #43A047, #1B5E20);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .project-info {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+        }
+        
+        .project-info h2 {
+            color: #4a6fa5;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-hands-helping"></i> 特殊教育劳动技能AI助手</h1>
+            <p class="subtitle">为特殊教育学生、教师和家长提供劳动技能培训指导、就业支持及个性化建议</p>
+            <p style="margin-top: 15px; font-size: 1rem; background-color: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px;">
+                参赛项目 | 特殊教育技术创新应用
+            </p>
+        </header>
+        
+        <div class="content">
+            <section class="chat-section">
+                <div class="chat-header">
+                    <i class="fas fa-robot"></i>
+                    <div>
+                        <h2>劳动技能助手</h2>
+                        <p>随时为您解答特殊教育劳动技能相关问题</p>
+                    </div>
+                </div>
+                
+                <div class="chat-container" id="chat-container">
+                    <!-- 初始消息将由JavaScript动态添加 -->
+                </div>
+                
+                <div class="chat-controls">
+                    <button class="clear-btn" id="clear-btn"><i class="fas fa-trash-alt"></i> 清空对话</button>
+                    <div class="message-count" id="message-count">消息: 0</div>
+                </div>
+                
+                <div class="input-area">
+                    <input type="text" id="user-input" placeholder="请输入您关于特殊教育劳动技能的问题...">
+                    <button id="send-btn"><i class="fas fa-paper-plane"></i> 发送</button>
+                </div>
+                
+                <div class="examples">
+                    <p style="padding: 0 20px; color: #666; width: 100%; font-size: 0.95rem;">试试问这些问题：</p>
+                    <button class="example-btn" data-question="如何为自闭症学生设计劳动技能训练？">自闭症学生劳动技能训练</button>
+                    <button class="example-btn" data-question="适合智力障碍学生的就业方向有哪些？">智力障碍学生就业方向</button>
+                    <button class="example-btn" data-question="如何评估特殊教育学生的职业兴趣？">职业兴趣评估方法</button>
+                    <button class="example-btn" data-question="劳动技能训练中如何确保学生的安全？">劳动技能训练安全措施</button>
+                </div>
+            </section>
+            
+            <div class="sidebar">
+                <div class="info-box">
+                    <h2><i class="fas fa-info-circle"></i> 特殊教育劳动技能</h2>
+                    <p>特殊教育劳动技能培训旨在帮助有特殊需求的学生掌握独立生活和就业所需的能力，包括：</p>
+                    <ul>
+                        <li>基本工作习惯与态度</li>
+                        <li>简单职业技能训练</li>
+                        <li>工作场所社交技能</li>
+                        <li>安全知识与自我保护</li>
+                        <li>辅助技术应用</li>
+                    </ul>
+                    
+                    <div class="skill-tags">
+                        <span class="skill-tag">清洁整理</span>
+                        <span class="skill-tag">餐饮服务</span>
+                        <span class="skill-tag">园艺绿化</span>
+                        <span class="skill-tag">简单组装</span>
+                        <span class="skill-tag">零售服务</span>
+                        <span class="skill-tag">办公室辅助</span>
+                    </div>
+                </div>
+                
+                <div class="qrcode-box">
+                    <h2><i class="fas fa-qrcode"></i> 扫码访问助手</h2>
+                    <p>使用手机扫描二维码，随时随地咨询特殊教育劳动技能问题</p>
+                    <div class="qrcode-container">
+                        <div id="qrcode">
+                            <div class="qrcode-placeholder">
+                                <i class="fas fa-qrcode"></i>
+                                <div>正在生成二维码...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="qrcode-instructions">打开手机相机扫描二维码，即可在手机上访问此AI助手</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="project-info">
+            <h2><i class="fas fa-medal"></i> 项目说明</h2>
+            <p><strong>项目名称：</strong>特殊教育劳动技能AI助手</p>
+            <p><strong>项目目标：</strong>为特殊教育领域提供智能化的劳动技能培训指导，帮助特殊教育学生获得就业能力，促进社会融合。</p>
+            <p><strong>核心功能：</strong></p>
+            <ul>
+                <li>智能问答：解答特殊教育劳动技能相关问题</li>
+                <li>个性化建议：根据学生特点提供训练方案</li>
+                <li>资源整合：提供评估工具、教学方法和辅助技术信息</li>
+                <li>移动友好：支持手机扫码访问，随时随地使用</li>
+            </ul>
+        </div>
+        
+        <div class="download-section">
+            <h2><i class="fas fa-cloud-download-alt"></i> 部署与使用</h2>
+            <p>本AI助手为纯HTML/CSS/JavaScript实现，无需服务器后端，可直接部署到任何Web服务器。</p>
+            <button class="download-btn" id="download-btn">
+                <i class="fas fa-download"></i> 下载完整项目文件
+            </button>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">包含HTML文件、使用说明和部署指南</p>
+        </div>
+        
+        <footer>
+            <p>© 2023 特殊教育劳动技能AI助手 | 本助手提供的信息仅供参考，具体教育方案请咨询专业特教老师</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">参赛项目 - 特殊教育技术创新应用</p>
+        </footer>
+    </div>
+
+    <script>
+        // 特殊教育劳动技能知识库
+        const knowledgeBase = {
+            "自闭症": {
+                title: "自闭症学生劳动技能训练",
+                content: "针对自闭症学生的劳动技能训练建议：\n\n1. 结构化教学：使用视觉时间表、任务分解卡片，将复杂任务分解为简单步骤\n2. 情境模拟：在安全环境中模拟实际工作场景，减少焦虑感\n3. 感官适应：考虑学生的感官敏感度，调整工作环境（如光线、声音、材质）\n4. 社交脚本：教授工作场所社交互动的标准语言和行为模式\n5. 强化系统：建立明确的奖励机制，鼓励任务完成和积极行为\n6. 兴趣结合：将学生的特殊兴趣与工作内容相结合，提高参与动机",
+                examples: ["视觉提示系统", "任务分解技术", "社交故事应用"]
+            },
+            "智力障碍": {
+                title: "智力障碍学生就业方向",
+                content: "适合智力障碍学生的就业方向：\n\n1. 清洁与整理工作：办公室清洁、酒店客房整理、垃圾分类\n2. 餐饮服务辅助：餐具摆放、简单食品包装、餐厅清洁\n3. 简单组装与包装：产品配件组装、礼盒包装、标签粘贴\n4. 园艺与绿化：植物浇水、简单修剪、落叶清扫\n5. 零售辅助：货架整理、商品标价、库存清点\n6. 办公支持：文件归档、简单复印、邮件分发\n\n选择工作时需考虑：任务重复性、安全性、支持程度、交通便利性",
+                examples: ["支持性就业", "庇护性工场", "定制化岗位"]
+            },
+            "评估": {
+                title: "职业兴趣与能力评估",
+                content: "特殊教育学生职业评估方法：\n\n1. 观察评估：在模拟或真实工作环境中观察学生表现\n2. 标准化测试：使用适应性职业兴趣量表（如AIHIS、COPS-P）\n3. 工作样本评估：提供具体工作任务样本，评估完成能力\n4. 情境访谈：通过结构化访谈了解学生偏好和期望\n5. 生态评估：考察学生在不同环境中的适应能力和支持需求\n6. 档案袋评估：收集学生作品、视频记录、教师观察报告\n\n评估周期应为持续过程，涵盖多个环境和时间段",
+                examples: ["工作样本法", "情境评估", "生态评估"]
+            },
+            "安全": {
+                title: "劳动技能训练安全措施",
+                content: "特殊教育劳动技能训练安全策略：\n\n1. 环境安全：消除物理危险，确保工作区域无障碍、通风良好\n2. 设备安全：选择适宜工具，提供安全防护装备，定期检查维护\n3. 程序安全：建立标准化安全操作流程，使用视觉提示卡\n4. 监督体系：实施分级监督制度，高风险活动需一对一指导\n5. 应急准备：制定应急预案，教授基本急救知识和求助方法\n6. 安全教育：定期开展安全培训，使用角色扮演强化安全意识\n\n需根据学生个体能力差异调整安全支持强度",
+                examples: ["视觉安全提示", "分级监督", "应急演练"]
+            },
+            "辅助技术": {
+                title: "辅助技术在劳动训练中的应用",
+                content: "可用的辅助技术工具：\n\n1. 视觉支持：任务分析APP、视觉日程表、步骤提示软件\n2. 物理辅助：适应性工具握把、防滑垫、工作台调节装置\n3. 认知辅助：语音提示设备、智能提醒系统、决策支持软件\n4. 沟通辅助：AAC设备（增强与替代沟通）、社交故事APP\n5. 环境控制：声光提示系统、智能环境调节设备\n6. 监测技术：可穿戴安全监测设备、工作进度追踪系统\n\n选择技术时应考虑：学生能力、任务需求、成本效益、维护要求",
+                examples: ["任务提示APP", "适应性工具", "AAC设备"]
+            },
+            "社交技能": {
+                title: "工作场所社交技能训练",
+                content: "工作场所社交技能培养策略：\n\n1. 基础互动：教授问候、道别、感谢、道歉等基本社交礼仪\n2. 指令遵从：训练理解工作指令、寻求澄清、确认任务\n3. 合作技能：学习轮流、分享、协助他人、团队协作\n4. 问题解决：培养识别问题、寻求帮助、尝试替代方案的能力\n5. 情绪管理：识别工作压力、运用缓解策略、适当表达情绪\n6. 职场文化：理解工作场所规范、尊重权威、适应组织文化\n\n使用角色扮演、视频示范、社交故事等多种教学方法",
+                examples: ["社交故事", "角色扮演", "视频示范"]
+            },
+            "职业转衔": {
+                title: "从学校到工作的转衔计划",
+                content: "特殊教育学生职业转衔服务：\n\n1. 早期探索：中学阶段开始职业兴趣探索和工作体验\n2. 个别化计划：制定个性化转衔计划(ITP)，明确毕业后的就业目标\n3. 技能培训：针对目标岗位进行系统化职业技能训练\n4. 实习体验：安排支持性实习，在工作场所实践技能\n5. 家庭参与：与家长合作，规划学生毕业后的生活安排\n6. 社区联结：建立与雇主、社区服务机构、职业康复机构的联系\n\n转衔计划应在学生毕业前2-3年开始系统实施",
+                examples: ["个别化转衔计划", "支持性实习", "社区联结"]
+            },
+            "支持策略": {
+                title: "工作场所支持策略",
+                content: "特殊教育学生工作支持方法：\n\n1. 自然支持：培训同事提供适当帮助，建立支持性工作氛围\n2. 工作教练：初期提供密集指导，逐步减少支持强度\n3. 任务调整：简化复杂任务、延长完成时间、减少干扰因素\n4. 环境调整：优化工作空间布局、减少感官刺激、提供休息区域\n5. 技术辅助：引入辅助技术设备，补偿功能限制\n6. 持续评估：定期评估支持效果，根据需要进行调整\n\n支持目标应是逐步减少外部支持，促进学生独立工作",
+                examples: ["工作教练", "任务调整", "环境适应"]
+            },
+            "默认": {
+                title: "特殊教育劳动技能支持",
+                content: "特殊教育劳动技能培训需要综合考虑学生的能力特点、兴趣和发展阶段。建议：\n\n1. 进行全面的能力评估，包括认知、运动、社交和自理能力\n2. 设定切实可行的短期和长期目标，并与IEP（个别化教育计划）结合\n3. 采用多感官教学方法，适应不同学习风格\n4. 加强与工作场所的合作，提供真实的工作体验机会\n5. 定期评估进展并根据需要调整训练计划\n6. 重视家庭参与，确保技能在家庭和社区中泛化\n\n您能具体说明学生的情况或需要帮助的方面吗？",
+                examples: ["能力评估", "IEP整合", "多感官教学"]
+            }
+        };
+        
+        // 对话历史
+        let conversationHistory = [];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chat-container');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const exampleBtns = document.querySelectorAll('.example-btn');
+            const messageCount = document.getElementById('message-count');
+            const qrcodeContainer = document.getElementById('qrcode');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            // 初始化对话
+            addMessage('ai', '您好！我是特殊教育劳动技能AI助手，专注于为特殊教育学生提供劳动技能发展支持。我可以帮助您了解：<br><br>1. 适合不同能力学生的劳动技能训练方法<br>2. 职业评估与就业指导建议<br>3. 个性化教育计划(IEP)中的劳动技能目标设定<br>4. 工作场所适应策略和辅助技术<br><br>请问您今天想了解什么？');
+            
+            // 生成二维码
+            generateQRCode();
+            
+            // 发送消息函数
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (!message) return;
+                
+                // 添加用户消息
+                addMessage('user', message);
+                userInput.value = '';
+                
+                // 显示AI正在输入指示器
+                showTypingIndicator();
+                
+                // 模拟AI回复延迟
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const aiResponse = generateAIResponse(message);
+                    addMessage('ai', aiResponse);
+                }, 800 + Math.random() * 800);
+            }
+            
+            // 添加消息到聊天界面
+            function addMessage(sender, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = sender === 'user' ? 'message user-message' : 'message ai-message';
+                
+                const header = document.createElement('div');
+                header.className = 'message-header';
+                
+                if (sender === 'user') {
+                    header.innerHTML = '<i class="fas fa-user"></i> 您';
+                } else {
+                    header.innerHTML = '<i class="fas fa-robot"></i> 特殊教育劳动技能助手';
+                }
+                
+                const content = document.createElement('div');
+                content.innerHTML = text;
+                
+                messageDiv.appendChild(header);
+                messageDiv.appendChild(content);
+                
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // 更新消息计数
+                conversationHistory.push({sender, text});
+                updateMessageCount();
+            }
+            
+            // 显示AI正在输入指示器
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message ai-message';
+                typingDiv.id = 'typing-indicator';
+                
+                const header = document.createElement('div');
+                header.className = 'message-header';
+                header.innerHTML = '<i class="fas fa-robot"></i> 特殊教育劳动技能助手';
+                
+                const typingContent = document.createElement('div');
+                typingContent.className = 'typing-indicator';
+                typingContent.innerHTML = '<span></span><span></span><span></span>';
+                
+                typingDiv.appendChild(header);
+                typingDiv.appendChild(typingContent);
+                
+                chatContainer.appendChild(typingDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            // 移除AI正在输入指示器
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            // 生成AI回复
+            function generateAIResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                
+                // 检查是否有匹配的关键词
+                for (const keyword in knowledgeBase) {
+                    if (keyword !== "默认" && lowerMessage.includes(keyword.toLowerCase())) {
+                        const knowledge = knowledgeBase[keyword];
+                        let response = `<strong>${knowledge.title}</strong><br><br>${knowledge.content.replace(/\n/g, '<br>')}`;
+                        
+                        if (knowledge.examples && knowledge.examples.length > 0) {
+                            response += '<br><br><strong>相关方法/技术：</strong><br>';
+                            knowledge.examples.forEach(example => {
+                                response += `• ${example}<br>`;
+                            });
+                        }
+                        
+                        return response;
+                    }
+                }
+                
+                // 默认回复
+                const defaultKnowledge = knowledgeBase["默认"];
+                let response = `<strong>${defaultKnowledge.title}</strong><br><br>${defaultKnowledge.content.replace(/\n/g, '<br>')}`;
+                
+                if (defaultKnowledge.examples && defaultKnowledge.examples.length > 0) {
+                    response += '<br><br><strong>相关方法/技术：</strong><br>';
+                    defaultKnowledge.examples.forEach(example => {
+                        response += `• ${example}<br>`;
+                    });
+                }
+                
+                return response;
+            }
+            
+            // 生成二维码
+            function generateQRCode() {
+                // 获取当前页面URL
+                let currentUrl = window.location.href;
+                
+                // 创建二维码图像
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}`;
+                
+                const qrCodeImg = document.createElement('img');
+                qrCodeImg.src = qrCodeUrl;
+                qrCodeImg.alt = "扫描二维码访问特殊教育劳动技能AI助手";
+                qrCodeImg.title = "扫描二维码在手机上访问";
+                qrCodeImg.onload = function() {
+                    qrcodeContainer.innerHTML = '';
+                    qrcodeContainer.appendChild(qrCodeImg);
+                };
+                
+                // 如果二维码加载失败，显示备用信息
+                qrCodeImg.onerror = function() {
+                    qrcodeContainer.innerHTML = `
+                        <div class="qrcode-placeholder">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>二维码生成失败</div>
+                            <p style="font-size: 0.8rem; font-weight: normal; margin-top: 10px; text-align: center;">
+                                当前URL: ${currentUrl.substring(0, 40)}...
+                            </p>
+                        </div>
+                    `;
+                };
+            }
+            
+            // 更新消息计数
+            function updateMessageCount() {
+                messageCount.textContent = `消息: ${conversationHistory.length}`;
+            }
+            
+            // 清空对话
+            function clearConversation() {
+                chatContainer.innerHTML = '';
+                conversationHistory = [];
+                updateMessageCount();
+                
+                // 重新添加初始消息
+                addMessage('ai', '您好！我是特殊教育劳动技能AI助手，专注于为特殊教育学生提供劳动技能发展支持。我可以帮助您了解：<br><br>1. 适合不同能力学生的劳动技能训练方法<br>2. 职业评估与就业指导建议<br>3. 个性化教育计划(IEP)中的劳动技能目标设定<br>4. 工作场所适应策略和辅助技术<br><br>请问您今天想了解什么？');
+            }
+            
+            // 下载项目文件
+            function downloadProject() {
+                // 创建项目说明文件内容
+                const projectContent = `
+特殊教育劳动技能AI助手 - 参赛项目
+
+项目说明：
+这是一个为特殊教育领域设计的智能助手，专注于劳动技能培训指导。
+
+文件包含：
+1. special-education-ai.html - 主程序文件
+2. README.txt - 本说明文件
+
+部署方法：
+1. 将HTML文件上传到任何Web服务器
+2. 通过浏览器访问该文件
+3. 使用手机扫描页面上的二维码即可在手机上访问
+
+GitHub Pages部署（推荐）：
+1. 访问 https://github.com 并注册账户
+2. 创建新仓库，上传HTML文件
+3. 进入仓库设置，找到Pages选项
+4. 选择主分支，保存后等待几分钟
+5. 获得免费网址：https://[用户名].github.io/[仓库名]/
+
+替代部署方法：
+1. Netlify: 拖拽上传HTML文件即可获得网址
+2. Vercel: 同样支持拖拽上传
+3. 国内平台：码云Gitee Pages、腾讯云静态网站托管等
+
+项目特点：
+- 纯前端实现，无需后端服务器
+- 响应式设计，支持手机和电脑
+- 离线知识库，快速响应
+- 专业特殊教育劳动技能内容
+
+联系方式：
+如有问题，请通过比赛组委会联系项目作者。
+
+祝您比赛顺利！
+                `;
+                
+                // 创建Blob对象
+                const htmlBlob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+                const readmeBlob = new Blob([projectContent], { type: 'text/plain' });
+                
+                // 创建下载链接
+                const htmlLink = document.createElement('a');
+                htmlLink.href = URL.createObjectURL(htmlBlob);
+                htmlLink.download = 'special-education-ai-assistant.html';
+                
+                const readmeLink = document.createElement('a');
+                readmeLink.href = URL.createObjectURL(readmeBlob);
+                readmeLink.download = 'README.txt';
+                
+                // 触发下载
+                htmlLink.click();
+                setTimeout(() => {
+                    readmeLink.click();
+                }, 100);
+                
+                // 清理
+                setTimeout(() => {
+                    URL.revokeObjectURL(htmlLink.href);
+                    URL.revokeObjectURL(readmeLink.href);
+                }, 1000);
+            }
+            
+            // 事件监听
+            sendBtn.addEventListener('click', sendMessage);
+            
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // 清空对话按钮
+            clearBtn.addEventListener('click', clearConversation);
+            
+            // 示例问题按钮
+            exampleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    userInput.value = question;
+                    sendMessage();
+                });
+            });
+            
+            // 下载按钮
+            downloadBtn.addEventListener('click', downloadProject);
+        });
+    </script>
+</body>
+</html>
